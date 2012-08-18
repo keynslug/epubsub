@@ -20,7 +20,7 @@ init([]) ->
     {ok, {
         {one_for_one, 5, 10}, 
         [
-            supstance:permanent(epubsub_http, local, inherit),
-            supstance:permanent(epubsub_channel, local, [])
+            supstance:permanent(epubsub_channel, local, []),
+            supstance:permanent(epubsub_http, local, inherit)
         ]
     }}.
