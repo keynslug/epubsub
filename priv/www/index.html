@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <head>
+        <title>EPubSub</title>
+        <script type="text/javascript" src="ws.js"></script>
+        <script type="text/javascript" src="client.js"></script>
+        <style>
+            body {
+                margin: 0 20%;
+                padding: 10px;
+                font-family: sans;
+            }
+            input#publish {
+                width: 99%;
+            }
+            div#sink {
+                margin-top: 10px;
+                border: 1px solid #aaa;
+                color: #556;
+                font-size: 0.9em;
+            }
+            div#sink > :nth-child(2n) {
+                background-color: #eef;
+            }
+            .ok {
+                background-color: #afa;
+            }
+            .fail {
+                background-color: #faa;
+            }
+        </style>
+    </head>
+    <body>
+        <input id="publish" type="text"></input>
+        <div id="sink">
+        </div>
+    </body>
+</html>
