@@ -116,35 +116,40 @@ code_change(_, State, _) ->
 %
 
 create_state() ->
-    gb_sets:new().
+    ordsets:new().
 
 do_subscribe(C, Clients) ->
-    NewClients = gb_sets:add(C, Clients),
-    WasSize = gb_sets:size(Clients),
-    NewSize = gb_sets:size(NewClients),
-    case NewSize of
-        WasSize ->
+    case ordsets:add_element(C, Clients) of
+        Clients ->
             {error, subscribed_already};
-        _ ->
+        NewClients ->
             {ok, NewClients}
     end.
 
 do_unsubscribe(C, Clients) ->
-    try
-        {ok, gb_sets:delete(C, Clients)}
-    catch _:_ ->
-        {error, not_subscribed}
+    case ordsets:del_element(C, Clients) of
+        Clients ->
+            {error, not_subscribed};
+        NewClients ->
+            {ok, NewClients}
     end.
 
 try_unsubscribe(C, Clients) ->
-    gb_sets:delete_any(C, Clients).
+    ordsets:del_element(C, Clients).
 
 do_publish(Pid, Payload, Clients) ->
-    Sender = fun
-        (C, _ok) when C =:= Pid -> ok;
-        (C, _Ok) -> C ! {publication, Payload}, ok
-    end,
-    gb_sets:fold(Sender, ok, Clients).
+    List = ordsets:to_list(Clients),
+    do_publish(Pid, Payload, ok, List).
+
+do_publish(_, _, Result, []) ->
+    Result;
+
+do_publish(Pid, Payload, Result, [Pid | Rest]) ->
+    do_publish(Pid, Payload, Result, Rest);
+
+do_publish(Pid, Payload, Result, [Client | Rest]) ->
+    Client ! {publication, Payload},
+    do_publish(Pid, Payload, Result, Rest).
 
 % Tests
 
