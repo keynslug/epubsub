@@ -81,7 +81,7 @@ handle_call(unsubscribe, {Pid, _Tag}, State) ->
             {reply, Error, State}
     end;
 
-handle_call({publish, Payload}, _From = {Pid, _Tag}, State) ->
+handle_call({publish, Payload}, From = {Pid, _Tag}, State) ->
     ?LOG_DEBUG("Publish request from ~p", [Pid]),
     spawn(fun () -> gen_server:reply(From, do_publish(Pid, Payload, State)) end),
     {noreply, State};
