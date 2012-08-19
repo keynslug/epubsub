@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
         sink.appendChild(element);
     }
 
-    var socket = new WsClient('channel', {
+    var socket = new WsClient('/channel', {
         online: function () {
             writeLine("<div class='ok'>Connection estabilished</div>");
         },

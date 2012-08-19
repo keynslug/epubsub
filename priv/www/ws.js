@@ -42,11 +42,7 @@ function WsClient(target, listener) {
     
 WsClient.prototype.init = function () {
 
-    var here = 'ws://' + window.location.host;
-    if (here[here.length - 1] != '/') {
-        here += '/';
-    }
-    here += this.target;
+    var here = 'ws://' + window.location.host + this.target;
 
     console.debug('Estabilishing connection to:', here);
     
