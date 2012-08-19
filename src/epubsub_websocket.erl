@@ -21,7 +21,8 @@
 
 % Behaviour
 
-init({_Any, http}, Request, Options) ->
+init({_Any, http}, Request, _Options) ->
+    ?LOG_DEBUG("HTTP client accepted"),
     case cowboy_http_req:header('Upgrade', Request) of
         {undefined, _}       -> {shutdown, Request, undefined};
         {<<"websocket">>, _} -> {upgrade, protocol, cowboy_http_websocket};
@@ -34,7 +35,7 @@ terminate(_Request, _State) ->
 websocket_init(_Any, Request, State) ->
     ?LOG_DEBUG("WebSocket client accepted on ~p", [element(1, cowboy_http_req:peer(Request))]),
     ok = epubsub_channel:subscribe(State),
-    {ok, Request, State, hibernate}.
+    {ok, cowboy_http_req:compact(Request), State, hibernate}.
 
 websocket_handle({ping, _}, Request, State) ->
     ?LOG_DEBUG("WebSocket process was poked"),
