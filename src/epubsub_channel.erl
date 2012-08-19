@@ -43,9 +43,7 @@ unsubscribe(Name) ->
 publish(Name, Payload) ->
     Pid = self(),
     ?LOG_DEBUG("Publish request from ~p", [Pid]),
-    {Ticks, Result} = timer:tc(fun do_publish/3, [Pid, Payload, Name]),
-    ?LOG_INFO("~p mcs", [Ticks]),
-    Result.
+    do_publish(Pid, Payload, Name).
 
 %
 
